@@ -10,4 +10,4 @@ jobs:
       - name: setup-env
         run: |
           sudo apt install cloc
-          cloc *
+          for d in ./*/ ; do (cd "$d" && echo "$d" && cloc --vcs git); done
