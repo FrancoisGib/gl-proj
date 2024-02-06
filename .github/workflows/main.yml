@@ -1,0 +1,13 @@
+name: GL
+  on:
+    push:
+      branches: ["main"]
+
+  jobs:
+    count:
+      runs-on: ubuntu-latest
+      steps:
+        name: setup-env
+        run: |
+          sudo apt install cloc
+          cloc ./
