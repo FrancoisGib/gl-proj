@@ -10,4 +10,6 @@ jobs:
       - name: setup-env
         run: |
           sudo apt install cloc
+          git clone git@github.com:code4craft/webmagic.git webmagic
+          cd webmagic
           for d in ./*/ ; do (cd "$d" && echo "$d" && cloc --vcs git); done
