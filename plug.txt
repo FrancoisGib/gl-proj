@@ -1,0 +1,5 @@
+    <plugins>
+        <plugin>
+            <artifactId>exec-maven-plugin</artifactId>
+        </plugin>
+    </plugins>

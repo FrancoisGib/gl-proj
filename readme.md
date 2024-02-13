@@ -21,5 +21,24 @@ Il faut importer soi-même le framework **log4j** et le configurer soi-même, le
 ## 2. Historique du logiciel
 
 ### 2.1 Analyse du git
-49 développeurs ont travaillé sur WebMagic mais on trouve principalement **code4craft** qui a développé et coordonné la plupart du projet.
-Le projet a été créé en 2013 et son pic d'activité était en 2014, le projet a été ralenti durant 3 ans et a été beaucoup refactor en 2017, mais la plupart des fonctionnalités ont été implémentées avant 2017. Depuis 2017, le projet a été repris par **Sutra** qui prend la place de code4craft.
+* 49 développeurs ont travaillé sur WebMagic mais on trouve principalement **code4craft** qui a développé et coordonné la plupart du projet.
+* Le projet a été créé en 2013 et son pic d'activité était en 2014, le projet a été ralenti durant 3 ans et a été beaucoup refactor en 2017, mais la plupart des fonctionnalités ont été implémentées avant 2017. Depuis 2017, le projet a été repris par **Sutra** qui prend la place de code4craft.
+* On compte 47 branches dans le projet. Curieusement, la branche principale ne s'appelle pas **main** ou **master** mais **develop**. Seulement 5 des 47 branches sont utilisées régulièrement, les autres sont pour la plupart des saves et des logs.
+* La mécanique des pull requests est utilisée. Il y en a 32 en attente et 181 ont été fermées à ce jour.
+
+
+
+## 3. Architecture logicielle
+
+### 3.1 Utilisation de bibliothèques extérieures
+* Il y a 26 dépendances et 35 plugins importés.
+* Les dépendances suivantes ne sont pas utilisées mais sont importées inutilement:
+  com.google.guava:guava:jar:32.0.0-jre:compile
+  org.slf4j:slf4j-api:jar:2.0.4:compile
+  org.apache.commons:commons-lang3:jar:3.12.0:compile
+  org.apache.commons:commons-collections4:jar:4.4:compile
+  com.fasterxml.jackson.core:jackson-core:jar:2.15.2:compile
+  com.fasterxml.jackson.core:jackson-annotations:jar:2.15.2:compile
+
+Il est embêtant de maintenir des dépendances surtout si celles ci ne sont pas utiles donc il faudra les retirer.
+
