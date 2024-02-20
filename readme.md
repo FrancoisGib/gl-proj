@@ -42,3 +42,7 @@ Il faut importer soi-même le framework **log4j** et le configurer soi-même, le
 
 Il est embêtant de maintenir des dépendances surtout si celles ci ne sont pas utiles donc il faudra les retirer.
 
+### 3.2 Paquetages
+
+* 
+
