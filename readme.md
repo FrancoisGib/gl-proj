@@ -52,10 +52,12 @@ Il est embêtant de maintenir des dépendances surtout si celles ci ne sont pas 
 
 ### 4.1 Tests
 
+Il y a 108 méthodes de tests dont 4 ignorées dans le projet et 143 assertions ce qui est ridicule. Néanmoins les 104 tests passent.
+
 ### 4.2 Commentaires
 
 * La javadoc est inégale, certaines classes sont bien documentées mais les autres n'en présentent aucune, de plus certaines documentations de méthodes n'expliquent en rien ce que la méthode fait, ce qui n'aide pas à la compréhension du projet. Si un nouveau développeur était amené à travailler sur le projet, il mettrait certainement très longtemps à comprendre l'utilité qu'a chacune des classes du projet. De plus, la documentation est parfois en chinois et non en anglais, ce qui limite fortement le nombre de développeur pouvant travailler sur le projet.
-* Il y a quelques bouts de code commentés, encore une fois un peu partout dans le projet, mais les classes bien documentées sont souvent propre et n'ont pas de code commenté.
+* Il y a 986 lignes de commentaires (hors javadoc) et 797 lignes de javadoc, soit dix pour cent des méthodes du projet sont documentées et certaines documentations sont très succintes et n'apportent rien à la compréhension du projet et trois pour cent des attributs, ce qui est très peu, mais les classes bien documentées sont souvent propre et n'ont pas de code commenté.
 Globalement, on voit vraiment une inégalité dans les différentes classes du projet, soit une classe est propre, testée et documentée, soit elle ne l'est pas du tout.
 
 ### 4.3 Dépréciation
@@ -74,8 +76,29 @@ Il arrive cependant que la nouvelle méthode remplacant celle déprécié appell
 
 ### 4.5 God Classes
 
-La classe ***Spider*** du package ***webmagic-core*** peut être considérée comme une God Class, avec plus de 500 lignes de code et compte une trentaine de dépendances et un grand nombre d'attributs, la classe a trop de responsabilités et d'informations sur les autres classes, ces responsabilités devraient être déléguées à d'autres classes, de plus la structure de cette classe est mauvaise, les constantes sont fondus dans les attributs classiques et les méthodes protected ne sont pas à la fin du fichier mais en plein milieu de la classe.
+La classe ***Spider*** du package ***webmagic-core*** peut être considérée comme une God Class, avec plus de 500 lignes de code et compte une trentaine de dépendances et un grand nombre d'attributs, la classe a trop de responsabilités et d'informations sur les autres classes, ces responsabilités devraient être déléguées à d'autres classes.
 
 ### 4.6 Analyse des méthodes
 
-La méthode avec la plus haute complexité cyclomatique est de 46, il s'agit d'une méthode de la classe ***PageModelExtractor***, il y a aussi la méthode ***run*** de la classe ***Spider*** qui a une complexité cyclomatique de 32, certaines méthodes sont vides, donc la complexité minimale est de 0.
+La méthode avec la plus haute complexité cyclomatique est de 26, il s'agit de la méthode ***processSingle*** de la classe ***PageModelExtractor***, certaines méthodes sont vides, donc la complexité minimale est de 0. La complexité cyclomatique moyenne est de 1,69 ce qui est relativement acceptable même si certaines méthodes sont extrêmes.
+
+## 5. Nettoyage de Code et Code smells
+
+### 5.1 Règles de nommage
+
+Les noms de méthodes, d'attributs sont globalement bons, chaque première lettre de mots est en majuscule (excepté le premier mot), c'est compréhensible et prononcable et ils n'hésitent pas à avoir des méthodes avec des noms longs pour décrire au mieux la méthode.
+
+### 5.2 Nombre magique
+
+On ne trouve pas de nombres magiques dans le projet, à chaque fois ces nombres sont définis par des constantes ce qui rend leur compréhension facile.
+
+### 5.3 Structure du code
+
+Dans certaines classes les attributs sont bien au début, mais quand on a des constantes, les attributs et les constantes sont mélangés, comme dans la classe ***Spider***, ce qui empêche de trouver les attributs facilement.
+Pour ce qui est de l'ordre des méthodes, les méthodes sont souvent mélangées, qu'elles soient public, private ou protected, ce qui est une mauvaise pratique.
+
+### 5.4 Code mort
+
+On compte 262 warnings de code non utilisé ce qui en fait du code mort. Il y a même des classes comme la classe ***TianyaPageProcesser*** qui ne sont jamais utilisées.
+
+On peut potentiellement supprimer certains bout de code mort, mais impossible de savoir avec exactitude si ce code sera utile dans le futur. Cependant, certaines méthodes "mortes" sont sûrement dans le projet afin d'être utilisées par les personnes souhaitant créer leur propre crawler à l'aide de webmagic.
