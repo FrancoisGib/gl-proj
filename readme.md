@@ -1,5 +1,7 @@
 # WebMagic
 
+## Lucas Lecouvez - François Gibier
+
 Lien du git du projet : https://github.com/code4craft/webmagic
 
 ## 1. Présentation globale du projet
@@ -16,7 +18,7 @@ Lien du git du projet : https://github.com/code4craft/webmagic
 * Il y a bien un readme dans le git du projet, il explique les fonctionnalités du crawler ainsi que les dépendances à importer pour le faire marcher. Cependant, le readme ne spécifie pas réellement comment utliser le crawler, il donne un petit template de code permettant de télécharger un site mais ne fonctionne pas correctement.
 Il faut importer soi-même le framework **log4j** et le configurer soi-même, le readme ne fournit aucune indication sur cette configuration.
 * On peut trouver une documentation plutôt complète sur le site de WebMagic, même si encore une fois le fonctionnement initial du crawler n'est pas explicite.
-* Malgré la documentation complète, il faut d'abord savoir de nombreuses choses avant de pouvoir exploiter les fonctionnalités.
+* Malgré la documentation complète sur le site, il faut d'abord savoir de nombreuses choses avant de pouvoir exploiter les fonctionnalités.
 
 ## 2. Historique du logiciel
 
@@ -25,8 +27,6 @@ Il faut importer soi-même le framework **log4j** et le configurer soi-même, le
 * Le projet a été créé en 2013 et son pic d'activité était en 2014, le projet a été ralenti durant 3 ans et a été beaucoup refactor en 2017, mais la plupart des fonctionnalités ont été implémentées avant 2017. Depuis 2017, le projet a été repris par **Sutra** qui prend la place de code4craft.
 * On compte 47 branches dans le projet. Curieusement, la branche principale ne s'appelle pas **main** ou **master** mais **develop**. Seulement 5 des 47 branches sont utilisées régulièrement, les autres sont pour la plupart des saves et des logs.
 * La mécanique des pull requests est utilisée. Il y en a 32 en attente et 181 ont été fermées à ce jour.
-
-
 
 ## 3. Architecture logicielle
 
@@ -45,8 +45,30 @@ Il est embêtant de maintenir des dépendances surtout si celles ci ne sont pas 
 ### 3.2 Paquetages
 
 * On compte 28 paquetages dans le projet.
-* On a des packages qui ne sont pas utilisés
+* On a des packages qui ne sont pas utilisés comme le package ***webmagic-coverage***.
+* Une quinzaine de classes ont des cycles entres dépendances, ce qui est une mauvaise chose car chacune des classes ont peut être trop d'informations sur les autres classes. 
+* On a 7 packages principaux qui ont chacuns leur propre pom.xml. La hiérarchie des tests est la même que la hiérarchie du projet ce qui est une bonne chose pour se répérer que ce soit dans les classes comme dans les tests.
+On ne compte pas un grand nombre d'imbrications de packages, en général la profondeur est de 3 à 4.
+* Les noms de package représentent bien les classes qu'ils contiennent mais ne donne aucune information sur les design utilisés.
 
+### 3.3 Répartition des classes dans les paquetages.
+
+On compte 320 classes dans le projet.
+Le package comptant le plus de classes est le package ***webmagic.model*** avec 36 classes, et le minimum de classes par package est 1, comme le package ***webmagic.formatter***.
+On a en moyenne 11 classes par package, ce qui est acceptable.
+On a 217 couplages et la classe utilisant le plus de classes est le package ***selector*** avec 24 classes utilisées ce qui est beaucoup car la classe a donc beaucoup trop d'informations sur les autres classes.
+
+### 3.4 Organisations de classes
+
+Globalement, le projet est plutot plat, les packages n'ont qu'un niveau de profondeur de 3 ou 4 en moyenne ce qui rend la navigation dans le projet plutot simple.
+
+Au niveau des héritages, la classe ayant le plus d'enfants est la classe ***BasicTypeFormatter*** du package ***formatter***, ce qui est beaucoup mais c'est compréhensible car on a beaucoup de formatter différents pour que le crawler marche sur toutes les plateformes.
+De manière générale, les classes qui ont des enfants n'en ont pas souvent plus d'un et en moyenne, un peu moins d'une classe sur 5 possède un enfant.
+
+Au maximum, la profondeur d'héritage est de 3 et en général elle est de 2, ce qui est largement acceptable.
+
+Il y a beaucoup de problèmes de cohésion dans les classes, en particulier sur les classes les plus hautes dans le projet, comme la classe ***Site*** du package principal avec 16 problème de cohésion.
+Sur l'ensemble du projet, on aurait 2 problèmes de cohésion par classe ce qui est énorme.
 
 ## 4. Analyse approfondie
 
@@ -82,6 +104,11 @@ La classe ***Spider*** du package ***webmagic-core*** peut être considérée co
 
 La méthode avec la plus haute complexité cyclomatique est de 26, il s'agit de la méthode ***processSingle*** de la classe ***PageModelExtractor***, certaines méthodes sont vides, donc la complexité minimale est de 0. La complexité cyclomatique moyenne est de 1,69 ce qui est relativement acceptable même si certaines méthodes sont extrêmes.
 
+On a aussi une méthode avec une grande complexité cyclomatique dans la class Spider (voir l'image ci-dessous).
+
+![](./methode_longue.png "Methode horrible")
+![](./deuxieme_methode_longue.png "Deuxième méthode horrible")
+
 ## 5. Nettoyage de Code et Code smells
 
 ### 5.1 Règles de nommage
@@ -102,3 +129,15 @@ Pour ce qui est de l'ordre des méthodes, les méthodes sont souvent mélangées
 On compte 262 warnings de code non utilisé ce qui en fait du code mort. Il y a même des classes comme la classe ***TianyaPageProcesser*** qui ne sont jamais utilisées.
 
 On peut potentiellement supprimer certains bout de code mort, mais impossible de savoir avec exactitude si ce code sera utile dans le futur. Cependant, certaines méthodes "mortes" sont sûrement dans le projet afin d'être utilisées par les personnes souhaitant créer leur propre crawler à l'aide de webmagic.
+
+## Conclusion
+
+Le projet n'est plus de première jeunesse et n'est pas souvent mis à jour même si on constate que ces derniers temps certains développeurs sont plus actifs sur le projet, il est tellement vieux que les méthodes d'autres projets qu'il utilise sont dépréciées voire plus supportées.
+On pourrait peut être mettre à jour ces méthodes pour pouvoir faire marcher ce qui a été supprimé ou simplement l'optimiser et le rendre plus lisible pour de nouveaux développeur pouvant arriver sur le projet.
+Il faut aussi améliorer la documentation et les commentaires qui sont très succints et parfois en chinois pour améliorer la compréhension.
+Certaines méthodes sont clairement trop grandes et ont une complexité catastrophique, elles sont donc à refactor et à améliorer.
+Il y a une god class dans le projet, on peut clairement réduire le nombre de classes qu'elle gère et les informations qu'elle possède afin d'augmenter le niveau d'abstraction.
+On peut également ajouter des design pattern dans cette god class ainsi qu'une stratégie notamment dans le package formatter.
+On peut aussi ajouter des tests car il y a en a très peu dans le projet.
+On peut corriger de nombreux code smells présents partout dans le projet (1200 warnings au total pour metrics reloaded).
+On peut aussi retirer les dépendances inutiles du projet pour le rendre plus léger et propre.
